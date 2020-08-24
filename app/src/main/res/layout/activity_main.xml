@@ -13,9 +13,9 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBar"
-            android:theme="@style/SearchViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/SearchViewStyle"
             app:defaultQueryHint="Search movies by title"
             app:iconifiedByDefault="false" />
 
