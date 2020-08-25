@@ -44,9 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         movies = mainViewModel.getMovies(context)
 
-        Log.i("filteredMovies1", movies.toString())
-
-
         val moviesByYear = movies
             .groupBy { it.year }
             .toSortedMap(compareByDescending { it })
