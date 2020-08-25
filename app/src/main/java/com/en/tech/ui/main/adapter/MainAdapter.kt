@@ -1,13 +1,12 @@
 package com.en.tech.ui.main.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.en.tech.App.Companion.context
 import com.en.tech.R
 import com.en.tech.domain.models.Movie
 import kotlinx.android.synthetic.main.movie_main_item.view.*
@@ -48,7 +47,7 @@ class MainAdapter(
         } else {
             MovieItemViewHolder(
                 LayoutInflater.from(context).inflate(R.layout.movie_main_item, parent, false)
-            )
+            ,onMovieClicked)
         }
     }
 
@@ -69,13 +68,17 @@ class MainAdapter(
         }
     }
 
-    inner class MovieItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class MovieItemViewHolder(view: View, private val onMovieClicked: (Movie) -> Unit) :
+        RecyclerView.ViewHolder(view) {
+
         private var movieTitle: TextView = view.movie_title
         private var rating: TextView = view.rating
+        private var item: LinearLayout = view.movie_item
 
         fun bind(movie: Movie) {
             movieTitle.text = movie.title
             rating.text = movie.rating.toString()
+            item.setOnClickListener { onMovieClicked(movie) }
         }
     }
 }

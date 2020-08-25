@@ -1,5 +1,6 @@
 package com.en.tech.ui.details
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +13,6 @@ import com.en.tech.App.Companion.context
 import com.en.tech.data.remote.network.response.RemoteResponse
 import com.en.tech.databinding.ActivityDetailsBinding
 import com.en.tech.domain.models.Movie
-import com.en.tech.domain.models.Photo
 import com.en.tech.ui.details.adapter.MoviePhotosAdapter
 import com.en.tech.ui.main.viewmodel.MainViewModel
 
@@ -52,8 +52,18 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initUI() {
         mAdapter = MoviePhotosAdapter(this)
+
+//        val cast: String = movie.cast.toString()
+
+        binding.movieTitle.text = movie.title
+        binding.rating.text = movie.rating.toString()
+        binding.releaseDate.text = "Release date: " + movie.year.toString()
+        binding.cast.text = (movie.cast?.joinToString())
+        binding.genres.text = (movie.genres?.joinToString())
+
         binding.rvMoviesPhotos.adapter = mAdapter
         binding.rvMoviesPhotos.layoutManager = GridLayoutManager(context, 3)
     }

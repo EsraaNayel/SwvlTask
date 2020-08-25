@@ -3,6 +3,7 @@ package com.en.tech.ui.main
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.en.tech.App.Companion.context
@@ -44,10 +45,9 @@ class MainActivity : AppCompatActivity() {
         movies = mainViewModel.getMovies(context)
 
         Log.i("filteredMovies1", movies.toString())
-//        val filteredMovies = movies.filter { it.title.equals("day") }
+//        val filteredMovies = movies.filter { it.title.contains("Day") }
 //        Log.i("filteredMovies2", filteredMovies.toString())
 
-        //
         val moviesByYear = movies
             .groupBy { it.year }
             .toSortedMap(compareByDescending { it })
@@ -60,45 +60,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         mAdapter.updateMovieList(items)
-    }
 
-
-    //Sorting by Rating
-    /* The main function that implements QuickSort()
-      arr[] --> Array to be sorted,
-      low  --> Starting index,
-      high  --> Ending index */
-    fun sort(arr: IntArray?, low: Int, high: Int) {
-        if (low < high) {
-            /* pi is partitioning index, arr[pi] is
-              now at right place */
-            val pi = partition(arr!!, low, high)
-
-            // Recursively sort elements before
-            // partition and after partition
-            sort(arr, low, pi - 1)
-            sort(arr, pi + 1, high)
-        }
-    }
-
-    fun partition(arr: IntArray, low: Int, high: Int): Int {
-        val pivot = arr[high]
-        var i = low - 1 // index of smaller element
-        for (j in low until high) {
-            // If current element is smaller than the pivot
-            if (arr[j] < pivot) {
-                i++
-                // swap arr[i] and arr[j]
-                val temp = arr[i]
-                arr[i] = arr[j]
-                arr[j] = temp
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    search(query)
+                }
+                return true
             }
-        }
-        // swap arr[i+1] and arr[high] (or pivot)
-        val temp = arr[i + 1]
-        arr[i + 1] = arr[high]
-        arr[high] = temp
-        return i + 1
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+//                binding.searchBar.clearFocus()
+//                binding.searchBar.setQuery(newText, false)
+//                mAdapter.updateMovieList(mainViewModel.getMovies(context))
+
+                return true
+            }
+
+        })
+//        binding.searchBar.setOnCloseListener{
+////            override fun onClose(): Boolean {
+//              return false
+//            mAdapter.updateMovieList(mainViewModel.getMovies(context))
+//
+////            }
+//
+//        }
+
+//        binding.searchBar.setOnCloseListener {
+////            searchImage.setVisibility(View.VISIBLE)
+//            mAdapter.updateMovieList(mainViewModel.getMovies(context))
+//            true
+//        }
     }
 
+    fun search(text: String) {
+        val filteredMovies = movies.filter { it.title.contains(text) }
+        val moviesByYear = filteredMovies
+            .groupBy { it.year }
+            .toSortedMap(compareByDescending { it })
+
+        val items = mutableListOf<Any>()
+
+        for (entry in moviesByYear) {
+            items.add(entry.key)
+            items.addAll(entry.value.sortedByDescending { it.rating }.take(5))
+        }
+        mAdapter.updateMovieList(items)
+    }
 }
