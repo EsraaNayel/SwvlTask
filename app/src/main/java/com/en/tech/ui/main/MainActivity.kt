@@ -45,8 +45,7 @@ class MainActivity : AppCompatActivity() {
         movies = mainViewModel.getMovies(context)
 
         Log.i("filteredMovies1", movies.toString())
-//        val filteredMovies = movies.filter { it.title.contains("Day") }
-//        Log.i("filteredMovies2", filteredMovies.toString())
+
 
         val moviesByYear = movies
             .groupBy { it.year }
@@ -70,28 +69,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-//                binding.searchBar.clearFocus()
-//                binding.searchBar.setQuery(newText, false)
-//                mAdapter.updateMovieList(mainViewModel.getMovies(context))
 
                 return true
             }
 
         })
-//        binding.searchBar.setOnCloseListener{
-////            override fun onClose(): Boolean {
-//              return false
-//            mAdapter.updateMovieList(mainViewModel.getMovies(context))
-//
-////            }
-//
-//        }
 
-//        binding.searchBar.setOnCloseListener {
-////            searchImage.setVisibility(View.VISIBLE)
-//            mAdapter.updateMovieList(mainViewModel.getMovies(context))
-//            true
-//        }
     }
 
     fun search(text: String) {
