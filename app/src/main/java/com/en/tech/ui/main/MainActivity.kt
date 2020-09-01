@@ -1,7 +1,6 @@
 package com.en.tech.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
@@ -41,7 +40,30 @@ class MainActivity : AppCompatActivity() {
         }
         binding.rvMovies.adapter = mAdapter
         binding.rvMovies.layoutManager = LinearLayoutManager(context)
+        getMovies()
 
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    search(query)
+                } else {
+                    binding.searchBar.clearFocus()
+                    getMovies()
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText==null){
+                    binding.searchBar.clearFocus()
+                    getMovies()
+                }
+                return true
+            }
+        })
+    }
+
+    fun getMovies() {
         movies = mainViewModel.getMovies(context)
 
         val moviesByYear = movies
@@ -49,29 +71,11 @@ class MainActivity : AppCompatActivity() {
             .toSortedMap(compareByDescending { it })
 
         val items = mutableListOf<Any>()
-
         for (entry in moviesByYear) {
             items.add(entry.key)
             items.addAll(entry.value.sortedByDescending { it.rating })
         }
-
         mAdapter.updateMovieList(items)
-
-        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    search(query)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-
-                return true
-            }
-
-        })
-
     }
 
     fun search(text: String) {
